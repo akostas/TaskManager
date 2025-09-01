@@ -12,6 +12,7 @@ This project uses a `.evn` file for configuration.
 An example file is provided as `.env_dist`.
 
 1. Copy the template:
+
 ```bash
 cp .env_dist .env
 ```
@@ -21,40 +22,42 @@ cp .env_dist .env
 ## Quickstart
 
 1. Build the start the containers image:
+
 ```bash
 docker-compose up --build
 ```
 
 2. Visit `http://localhost:8000/` to confirm the Django welcome page loads.
 3. Verify PostgreSQL is running:
-   - Open a shell inside the taskmanager_db container
-     ```bash
-     docker exec -it taskmanager_db bash
-     ```
-     or use the Docker Desktop.
+    - Open a shell inside the taskmanager_db container
+      ```bash
+      docker exec -it taskmanager_db bash
+      ```
+      or use the Docker Desktop.
 
-   - Connect to the database:
-     ```bash
-     psql -U taskuser -d taskdb
-     ```
-     
-   - Once inside `psql`, list databases:
-     ```sql
-     \l
-     ```
+    - Connect to the database:
+      ```bash
+      psql -U taskuser -d taskdb
+      ```
+
+    - Once inside `psql`, list databases:
+      ```sql
+      \l
+      ```
 
 ## Stopping the application
 
 - Press `Ctrl+C` in the terminal where `docker-compose` is running, or run:
+
 ```bash
 docker-compose down
 ```
 
 - To also remove the database volume (frest start):
+
 ```bash
 docker-compose down -v
 ```
-
 
 ## Creating a user
 
@@ -67,7 +70,7 @@ docker-compose down -v
     python sample_scripts/create_user.py --username testuser --email test@test.com --password testpass
     ```
 
-    Expected output: `User 'testuser' created successfully.`
+   Expected output: `User 'testuser' created successfully.`
 
 ## Task API Endpoints (curl Examples)
 
@@ -133,5 +136,27 @@ curl -u testuser:testpass -X DELETE http://localhost:8000/api/tasks/1/
 ```
 
 ### Notes:
+
 - Replace testuser:testpass with your username/password.
 - Replace task IDs (1) as needed.
+- The creator field is automatically set to the logged-in user. You do not need to include it in your POST request.
+
+## Filtering
+
+### Search by title or description
+
+```
+curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?search=backend"
+```
+
+### Filter by owner and search simultaneously
+
+```
+curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?owner=2&search=API"
+```
+
+### Order results
+
+```
+curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?ordering=-priority"
+```
