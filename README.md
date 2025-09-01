@@ -54,3 +54,84 @@ docker-compose down
 ```bash
 docker-compose down -v
 ```
+
+
+## Creating a user
+
+1. Enter `taskmanager_app` container:
+    ```
+    docker exec -ti taskmanager_app sh
+    ```
+2. Use the provided script to create a user:
+    ```
+    python sample_scripts/create_user.py --username testuser --email test@test.com --password testpass
+    ```
+
+    Expected output: `User 'testuser' created successfully.`
+
+## Task API Endpoints (curl Examples)
+
+All endpoints assume the user testuser exists.
+
+### POST: Create a new task
+
+```
+curl -u testuser:testpass -X POST http://localhost:8000/api/tasks/ \
+    -H "Content-Type: application/json" \
+    -d '{
+        "title": "Finish backend API",
+        "description": "Implement all CRUD endpoints for tasks",
+        "status": "UNASSIGNED",
+        "priority": 4,
+        "due_date": "2025-09-04T12:00:00Z",
+        "owner": null
+    }'
+```
+
+### GET: Get all tasks
+
+```
+curl -u testuser:testpass -X GET http://localhost:8000/api/tasks/
+```
+
+### GET: Get a single task
+
+```
+curl -u testuser:testpass -X GET http://localhost:8000/api/tasks/1/
+```
+
+### PATCH: Partially update a task
+
+```
+curl -u testuser:testpass -X PATCH http://localhost:8000/api/tasks/1/ \
+    -H "Content-Type: application/json" \
+    -d '{
+        "status": "IN_PROGRESS",
+        "priority": 3
+    }'
+```
+
+### PUT: Update a task
+
+```
+curl -u testuser:testpass -X PUT http://localhost:8000/api/tasks/1/ \
+    -H "Content-Type: application/json" \
+    -d '{
+        "title": "Finish backend API v2",
+        "description": "Full update of task fields",
+        "status": "IN_PROGRESS",
+        "priority": 3,
+        "due_date": "2025-09-06T12:00:00Z",
+        "owner": null
+    }'
+```
+
+### DELETE: Delete a task
+
+```
+curl -u testuser:testpass -X DELETE http://localhost:8000/api/tasks/1/
+```
+
+### Notes:
+- Replace testuser:testpass with your username/password.
+- Replace task IDs (1) as needed.
