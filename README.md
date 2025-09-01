@@ -176,3 +176,32 @@ curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?owner=2&searc
 ```
 curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?ordering=-priority"
 ```
+
+## Exports
+
+The tasks may be exported in a CSV file. The export respects filters, search and sorting, just like the API responses.
+
+### Export all tasks
+
+```
+curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/export/" -o tasks.csv
+```
+
+### Export filtered tasks (by owner)
+
+```
+curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/export/?owner=2" -o tasks.csv
+```
+
+### Export with search
+
+```
+curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/export/?search=backend" -o tasks.csv
+```
+
+### Export with ordering
+
+```
+curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/export/?ordering=-priority" -o tasks.csv
+```
+

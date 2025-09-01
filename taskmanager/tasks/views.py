@@ -1,4 +1,8 @@
+import csv
+
+from django.http import HttpResponse
 from rest_framework import viewsets, permissions, filters
+from rest_framework.decorators import action
 from .models import Task, Comment
 from .serializers import TaskSerializer, CommentSerializer
 from .permissions import TaskPermission, CommentPermission
@@ -28,6 +32,42 @@ class TaskViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Automatically set the creator to the logged-in user
         serializer.save(creator=self.request.user)
+
+    @action(detail=False, methods=["GET"], url_path="export")
+    def export_tasks(self, request):
+        """
+        Export tasks as csv.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Prepare response with CSV header
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="tasks.csv"'
+
+        writer = csv.writer(response)
+
+        # Write header row
+        writer.writerow([
+            "ID", "Title", "Description", "Status", "Priority",
+            "Due Date", "Owner", "Creator", "Created At", "Updated At"
+        ])
+
+        # Write task rows
+        for task in queryset:
+            writer.writerow([
+                task.id,
+                task.title,
+                task.description,
+                task.status,
+                task.priority,
+                task.due_date,
+                task.owner.username if task.owner else "",
+                task.creator.username if task.creator else "",
+                task.created_at,
+                task.updated_at,
+            ])
+
+        return response
 
 
 class CommentViewSet(viewsets.ModelViewSet):
