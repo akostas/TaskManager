@@ -3,7 +3,6 @@ FROM python:3.13.2-alpine3.21
 WORKDIR /app
 
 # Install system dependencies required for psycopg2
-#RUN apt update && apt install -y --no-install-recommends gcc libpq-dev build-essential && rm -rf /var/lib/apt/lists/*
 RUN apk add --no-cache \
     postgresql-dev \
     gcc \

@@ -22,7 +22,9 @@ services:
     restart: always
 #    depends_on:
 #      - postgres
-    command: python taskmanager/manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python taskmanager/manage.py migrate --noinput &&
+      python taskmanager/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
