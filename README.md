@@ -176,6 +176,3 @@ curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?owner=2&searc
 ```
 curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?ordering=-priority"
 ```
-
-## Pagination
-

@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, filters
-from .models import Task
-from .serializers import TaskSerializer
-from .permissions import TaskPermission
+from .models import Task, Comment
+from .serializers import TaskSerializer, CommentSerializer
+from .permissions import TaskPermission, CommentPermission
 
 
 # Create your views here.
@@ -28,3 +28,13 @@ class TaskViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Automatically set the creator to the logged-in user
         serializer.save(creator=self.request.user)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated, CommentPermission]
+
+    def perform_create(self, serializer):
+        # Automatically set the author to the logged-in user
+        serializer.save(author=self.request.user)

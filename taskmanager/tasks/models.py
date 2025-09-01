@@ -47,3 +47,26 @@ class Task(models.Model):
         null=True,
         db_comment="Foreign Key to the User who currently owns the task.",
     )
+
+
+class Comment(models.Model):
+    """
+    Represents the comments that correspond to the tasks.
+    """
+    task = models.ForeignKey(
+        "Task",
+        related_name="comments",
+        on_delete=models.CASCADE,
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.task.title}."

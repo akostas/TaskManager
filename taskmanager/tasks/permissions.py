@@ -25,3 +25,18 @@ class TaskPermission(permissions.BasePermission):
 
         # Deny everything else
         return False
+
+
+class CommentPermission(permissions.BasePermission):
+    """
+    Custom permission for Comment. Authors of a comment are allowed to modify or delete their comments,
+    while other users are not.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read-only allowed for any authenticated user
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Update/Delete allowed for author
+        return obj.author == request.user
