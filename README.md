@@ -72,6 +72,17 @@ docker-compose down -v
 
    Expected output: `User 'testuser' created successfully.`
 
+## Creating sample tasks
+
+1. Enter `taskmanager_app` container:
+    ```
+    docker exec -ti taskmanager_app sh
+    ```
+2. Use the provided script to create a user:
+    ```
+    python sample_scripts/create_tasks.py
+    ```
+
 ## Task API Endpoints (curl Examples)
 
 All endpoints assume the user testuser exists.
@@ -95,6 +106,11 @@ curl -u testuser:testpass -X POST http://localhost:8000/api/tasks/ \
 
 ```
 curl -u testuser:testpass -X GET http://localhost:8000/api/tasks/
+```
+
+The results are returned paginated, with 10 tasks per page. Each page may be accessed similar to the following:
+```
+curl -u testuser:testpass -X GET http://localhost:8000/api/tasks/?page=2
 ```
 
 ### GET: Get a single task
@@ -160,3 +176,6 @@ curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?owner=2&searc
 ```
 curl -u testuser:testpass -X GET "http://localhost:8000/api/tasks/?ordering=-priority"
 ```
+
+## Pagination
+
