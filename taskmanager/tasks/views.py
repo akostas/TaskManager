@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, filters
 from .models import Task
 from .serializers import TaskSerializer
+from .permissions import TaskPermission
 
 
 # Create your views here.
@@ -10,7 +11,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     """
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, TaskPermission]
 
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["title", "description"]
